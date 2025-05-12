@@ -73,7 +73,7 @@ class DAO():
 
         cursor = conn.cursor(dictionary=True)
         query = """select *
-                       from connessione c"""
+                   from connessione c"""
 
         cursor.execute(query)
 
@@ -84,3 +84,26 @@ class DAO():
         conn.close()
         return ris
 
+    # -----------------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def getAllEdgesPesati():
+
+        conn = DBConnect.get_connection()
+        ris = []
+
+        cursor = conn.cursor(dictionary=True)
+        query = """select id_stazP, id_stazA , count(*) as n
+                   from connessione c
+                   group by id_stazP, id_stazA 
+                   order by n desc"""
+
+        cursor.execute(query)
+
+        for row in cursor:
+            ris.append(( row["id_stazP"], row["id_stazA"], row["n"]))  #tupla
+
+        cursor.close()
+        conn.close()
+        return ris
+
+    # -----------------------------------------------------------------------------------------------------------------------------

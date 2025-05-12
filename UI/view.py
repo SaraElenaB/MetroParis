@@ -14,6 +14,7 @@ class View(ft.UserControl):
         page.window_center()
         # controller (it is not initialized. Must be initialized in the main, after the controller is created)
         self._controller = None
+
         # graphical elements
         self.lst_result = None
         self._title = None
@@ -28,19 +29,19 @@ class View(ft.UserControl):
 
         # ROW with title
         img_path = os.path.join(os.getcwd(), 'database/RATP.png')
-        self._logo = ft.Image(src=img_path,
-                              width=100,
-                              height=100,
-                              )
+        self._logo = ft.Image(src=img_path, width=100, height=100)
 
         row1 = ft.Row([self._title, self._logo],
                       alignment=ft.MainAxisAlignment.CENTER)
 
         # Row with controls
-        self._btnCrea = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handleCreaGrafo)
+        self._btnCrea = ft.ElevatedButton(text="Crea Grafo",
+                                          on_click=self._controller.handleCreaGrafo)
         self._ddStazPartenza = ft.Dropdown(label="Stazione di Partenza")
         self._ddStazArrivo = ft.Dropdown(label="Stazione di Arrivo")
-        self._btnCalcola = ft.ElevatedButton(text="Calcola Raggiungibili", on_click=self._controller.handleCercaRaggiungibili)
+        self._btnCalcola = ft.ElevatedButton(text="Calcola Raggiungibili",
+                                             on_click=self._controller.handleCercaRaggiungibili,
+                                             disabled=True)   #AGGIUNTO IO
 
 
         #Load elements in DD
@@ -48,11 +49,8 @@ class View(ft.UserControl):
         self._controller.loadFermate(self._ddStazArrivo)
 
 
-        row2 = ft.Row([self._btnCrea,
-                       self._ddStazPartenza,
-                       self._ddStazArrivo,
-                       self._btnCalcola,
-                       ], alignment=ft.MainAxisAlignment.CENTER, spacing=30)
+        row2 = ft.Row([self._btnCrea, self._ddStazPartenza, self._ddStazArrivo, self._btnCalcola],
+                      alignment=ft.MainAxisAlignment.CENTER, spacing=30)
 
         # Row with listview
         self.lst_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=False)
@@ -61,6 +59,7 @@ class View(ft.UserControl):
 
         self._page.update()
 
+    #--------------------------------------------------------------------------------------------------------------------------------
     def set_controller(self, controller):
         self._controller = controller
 
