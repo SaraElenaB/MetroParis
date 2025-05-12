@@ -80,7 +80,7 @@ class Model:
         nodi = list(tree.nodes())
         return nodi[1:]
 
-    # -------------------------------------------------------------------------------------------------------------------------
+
     def getDFSnodesFromTree(self, source):
 
         #Depth-first-visit --> visita in profindità
@@ -88,7 +88,7 @@ class Model:
         nodi= list(tree.nodes())
         return nodi[1:] #per togliere il nodo da cui parto
 
-    # -------------------------------------------------------------------------------------------------------------------------
+
     def getBFSbodesFromEdges(self, source):
 
         archi = nx.bfs_edges(self._grafo, source)
@@ -97,7 +97,7 @@ class Model:
             ris.append(a)
         return ris
 
-    # -------------------------------------------------------------------------------------------------------------------------
+
     def getDFSbodesFromEdges(self, source):
 
         archi = nx.dfs_edges(self._grafo, source)
