@@ -1,7 +1,12 @@
 from datetime import datetime
 
+import geopy.distance
+
 from database.DAO import DAO
 import networkx as nx
+
+from model.fermata import Fermata
+
 
 class Model:
     def __init__(self):
@@ -111,7 +116,8 @@ class Model:
 
         self._grafo.clear()
         self._grafo.add_nodes_from(self._fermate)
-        self.addEdgesPesati()
+        #self.addEdgesPesati()
+        self.addArchiPesatiTempi()
 
     def addEdgesPesati(self):
 
@@ -147,4 +153,31 @@ class Model:
         print(ris)
 
     # -------------------------------------------------------------------------------------------------------------------------
+    def addArchiPesatiTempi(self):
+        #Aggiunge archi con peso uguale al tempo di percorrenza dell'altro
+        #Con questo nuovo metodo andiamo a cambiare la componente peso, che diventa la velocita e non più 1 o 2
+        self._grafo.clear_edges()
+        allEdges= DAO.getAllEdgesVelocita() #facendo una group by so che gli archi ci sono
+        for e in allEdges:
+            u = self._idMapFermate[e[0]] #è una tupla
+            v = self._idMapFermate[e[1]]
+            peso = getTraversaTime(u, v, e[2])
+            self._grafo.add_edge(u,v,weight=peso)
 
+    # -------------------------------------------------------------------------------------------------------------------------
+    def getShortestPath(self, u, v):
+        return nx.single_source_dijkstra(self._grafo, u, v)  #su google: shortest path dijkestra networkx
+        #molto semplice --> a questo punto nel controller definisci il bottone
+
+
+def getTraversaTime(u: Fermata, v: Fermata, velocita):
+
+    distanza = geopy.distance.distance((u.coordX, u.coordY), (v.coordX, v.coordY) ).km
+    time = distanza/velocita *60 #cosi ho i minuti
+    return time
+
+
+if __name__ == "__main__":
+    m = Model()
+    m.buildGraph()
+    print(f"Num nodi: {m.getNumNodi()} \nNum archi: {m.getNumArchi()}")

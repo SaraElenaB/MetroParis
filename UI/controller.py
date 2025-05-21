@@ -8,18 +8,19 @@ class Controller:
         # the model, which implements the logic of the program and holds the data
         self._model = model
 
-        self._fermataPartenza= None
+        #self._fermataPartenza= None
 
     #-------------------------------------------------------------------------------------------------------------------------------
     def handleCreaGrafo(self,e):
 
-        self._model.buildGraph()
+        self._model.buildGraphPesato()
         self._view.lst_result.controls.clear()
         self._view.lst_result.controls.append( ft.Text("Grafo correttamente creato!"))
         self._view.lst_result.controls.append(ft.Text(f"Il grafo contiene {self._model.getNumNodi()} nodi"))
         self._view.lst_result.controls.append(ft.Text(f"Il grafo contiene {self._model.getNumArchi()} archi"))
 
         self._view._btnCalcola.disabled = False   #attivo solo dopo che creo il grafo
+        self._view._btnCalcolaPercorso.disabled = False
         self._view.update_page()
 
     # -------------------------------------------------------------------------------------------------------------------------------
@@ -71,3 +72,25 @@ class Controller:
             self._fermataArrivo = e.control.data
 
     #-------------------------------------------------------------------------------------------------------------------------------
+    def handleCercaPercorso(self, e):
+
+        if self._fermataPartenza is None or self._fermataArrivo is None:
+            self._view.lst_result.controls.clear()
+            self._view.lsl_result.controls.append( ft.Text(f"Attenzione, selezionare fermate di partenza e arrivo!", color="red"))
+            self._view.update_page()
+            return
+
+        totTime, path = self._model.getShortestPath(self._fermataPartenza, self._fermataArrivo)  #float, tot di nodi
+
+        if path == []:
+            self._view.lst_result.controls.clear()
+            self._view.lsl_result.controls.append( ft.Text(f"Non è stato trovato un cammino tra {self._fermataPartenza} e {self._fermataArrivo}!", color="red"))
+            self._view.update_page()
+            return
+
+        self._view.lst_result.controls.clear()
+        self._view.lst_result.controls.append( ft.Text(f"Ho trovato un cammino tra {self._fermataPartenza} e {self._fermataArrivo} che impiega {totTime} minuti."))
+        for n in path:
+            self._view.lst_result.controls.append( ft.Text(n))
+        self._view.update_page()
+        return

@@ -43,13 +43,17 @@ class View(ft.UserControl):
                                              on_click=self._controller.handleCercaRaggiungibili,
                                              disabled=True)   #AGGIUNTO IO
 
+        self._btnCalcolaPercorso= ft.ElevatedButton( text="Cerca percorso",
+                                                     on_click=self._controller.handleCercaPercorso,
+                                                     disabled=True)
+
 
         #Load elements in DD
         self._controller.loadFermate(self._ddStazPartenza)
         self._controller.loadFermate(self._ddStazArrivo)
 
 
-        row2 = ft.Row([self._btnCrea, self._ddStazPartenza, self._ddStazArrivo, self._btnCalcola],
+        row2 = ft.Row([self._btnCrea, self._ddStazPartenza, self._ddStazArrivo, self._btnCalcola, self._btnCalcolaPercorso],
                       alignment=ft.MainAxisAlignment.CENTER, spacing=30)
 
         # Row with listview
